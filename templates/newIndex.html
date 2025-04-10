@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockVision:Reliance</title>
+    <link rel="icon" type="image/png" href="https://t4.ftcdn.net/jpg/02/99/97/81/360_F_299978128_VrSxbrMdiTHh4Zx51SGnpMtI24SZs8MD.jpg">
+    <style>
+      * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  .container p{
+    font-size: 17px;
+    padding-right: 130px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    
+  }
+
+  .container {
+    max-width: 1000px; /* agar chhota lag raha ho to 600 ya 700px bhi kar sakta hai */
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* shadow effect */
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+
+  form input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  input {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  .results {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+  }
+
+    </style>
+
+</head>
+<body>
+
+ 
+  <div class="container">
+    <h1>Enter Input for Prediction</h1>
+
+    <form id="predictForm">
+        <p>Enter the opening price</p>
+      <input type="text" id="value1" placeholder="Value 1" required />
+      <p >  Enter the number of trades</p>
+      <input type="text" id="value2" placeholder="Value 2" required />
+      <!-- <button type="submit">Predict</button> -->
+    </form>
+    
+  
+   <div class="results">
+    <button onclick="getPrediction()">Predict</button>
+
+    <div id="result1"></div>
+    <div id="result2"></div>
+    <div id="result3"></div>
+   </div>
+</div>
+  <script>
+    async function getPrediction() {
+      const val1 = parseFloat(document.getElementById('value1').value);
+      const val2 = parseFloat(document.getElementById('value2').value);
+      // Add more values as needed
+
+      const inputData = [val1, val2];  // Update with full list
+
+      const response = await fetch('http://localhost:5000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ input: inputData })
+      });
+
+      const result = await response.json();
+
+      if (result.pred1 !== undefined) {
+        document.getElementById('result1').innerText = "High Price: " + result.pred1;
+        document.getElementById('result2').innerText = "Close Price: " + result.pred2;
+        document.getElementById('result3').innerText = "Low Price: " + result.pred3;
+      } else {
+        document.getElementById('result').innerText = "Error: " + result.error;
+      }
+    }
+  </script>
+
+</body>
+</html>
